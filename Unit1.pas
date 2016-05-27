@@ -5,17 +5,16 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, kompasapi7_tlb, kompas6constants_tlb,
-  COMObj, StdCtrls, jpeg, ExtCtrls, Vcl.ComCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, KompasAPI7_TLB, kompas6constants_tlb,
+  COMObj, StdCtrls, jpeg, ExtCtrls, Vcl.ComCtrls, Kompas6API2D5COM_TLB,
+  Kompas6API3D5COM_TLB, Kompas6API5_TLB;
 
 type
   TForm1 = class(TForm)
-    Panel1: TPanel;
     Button1: TButton;
     LabeledEdit2: TLabeledEdit;
     LabeledEdit3: TLabeledEdit;
     LabeledEdit4: TLabeledEdit;
-    LabeledEdit5: TLabeledEdit;
     procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
@@ -28,11 +27,163 @@ var
   D, D1, L, L1, L2, L3, D2, D4, L4, L5, L6, L7, L8, M: extended;
   B0, L0, K0, M0, Z0: extended;
 function AddLine(LSS: ILineSegments; X1, Y1, X2, Y2: extended): ILineSegment;
-procedure Kompas(B, l, k, m, z: extended);
 
 implementation
 
 {$R *.dfm}
+
+procedure SetToleranceText( tolPar : IToleranceParam );
+var
+  tolTable  : ITable;
+  txt       : ITextLine;
+  cell      : ITableCell;
+begin
+	if ( tolPar <> nil ) then
+	begin
+		// Получить интерфейс таблицы с текстом допуска формы
+		tolTable := tolPar.Table;
+
+		if ( tolTable <> nil ) then
+		begin
+			// Добавить 3 столбца (1 уже есть)
+//			tolTable.AddColumn( -1, TRUE {справа} );
+//			tolTable.AddColumn( -1, TRUE {справа} );
+//			tolTable.AddColumn( -1, TRUE {справа} );
+			// Записать текст в 1-ю ячейку
+			cell := tolTable.Cell[ 0, 0 ];
+			if ( cell <> nil ) then
+			begin
+				txt:= cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := 'A';
+			end;
+			// Записать текст во 2-ю ячейку
+			cell := tolTable.Cell[ 0, 1 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '@27~';
+			end;
+			// Записать текст в 3-ю ячейку
+			cell := tolTable.Cell[ 0, 2 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '@26~';
+			end;
+			// Записать текст в 4-ю ячейку
+			cell := tolTable.Cell[ 0, 3 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+
+				if ( txt <> nil ) then
+					txt.Str := '@25~';
+			end;
+		end;
+	end;
+end;
+
+procedure SetToleranceText2( tolPar : IToleranceParam );
+var
+  tolTable  : ITable;
+  txt       : ITextLine;
+  cell      : ITableCell;
+begin
+	if ( tolPar <> nil ) then
+	begin
+		// Получить интерфейс таблицы с текстом допуска формы
+		tolTable := tolPar.Table;
+
+		if ( tolTable <> nil ) then
+		begin
+			// Добавить 3 столбца (1 уже есть)
+			tolTable.AddColumn( -1, TRUE {справа} );
+//			tolTable.AddColumn( -1, TRUE {справа} );
+//			tolTable.AddColumn( -1, TRUE {справа} );
+			// Записать текст в 1-ю ячейку
+			cell := tolTable.Cell[ 0, 0 ];
+			if ( cell <> nil ) then
+			begin
+				txt:= cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '@23~';
+			end;
+			// Записать текст во 2-ю ячейку
+			cell := tolTable.Cell[ 0, 1 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '0.012';
+			end;
+			// Записать текст в 3-ю ячейку
+			cell := tolTable.Cell[ 0, 2 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '@26~';
+			end;
+			// Записать текст в 4-ю ячейку
+			cell := tolTable.Cell[ 0, 3 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+
+				if ( txt <> nil ) then
+					txt.Str := '@25~';
+			end;
+		end;
+	end;
+end;
+
+procedure SetToleranceText3( tolPar : IToleranceParam );
+var
+  tolTable  : ITable;
+  txt       : ITextLine;
+  cell      : ITableCell;
+begin
+	if ( tolPar <> nil ) then
+	begin
+		// Получить интерфейс таблицы с текстом допуска формы
+		tolTable := tolPar.Table;
+
+		if ( tolTable <> nil ) then
+		begin
+			// Добавить 3 столбца (1 уже есть)
+			tolTable.AddColumn( -1, TRUE {справа} );
+			tolTable.AddColumn( -1, TRUE {справа} );
+//			tolTable.AddColumn( -1, TRUE {справа} );
+			// Записать текст в 1-ю ячейку
+			cell := tolTable.Cell[ 0, 0 ];
+			if ( cell <> nil ) then
+			begin
+				txt:= cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '@25~';
+			end;
+			// Записать текст во 2-ю ячейку
+			cell := tolTable.Cell[ 0, 1 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := '0.025';
+			end;
+			// Записать текст в 3-ю ячейку
+			cell := tolTable.Cell[ 0, 2 ];
+			if ( cell <> nil ) then
+			begin
+				txt := cell.Text As ITextLine;
+				if ( txt <> nil ) then
+					txt.Str := 'A';
+			end;
+			end;
+		end;
+	end;
 
 function AddLine(LSS: ILineSegments; X1, Y1, X2, Y2: extended): ILineSegment;
 var
@@ -190,7 +341,7 @@ begin
   Result := LS2;
 end;
 
-procedure Kompas(B, l, k, m, z: extended);
+procedure Kompas(B, M, z: extended);
 var
   x0, y0: extended;
   KP: IApplication;
@@ -206,6 +357,7 @@ var
   dimText: IDimensionText;
   dimParam: IDimensionParams;
   LineSeg: array [0 .. 45] of ILineSegment;
+  g: IDocument2DSettings;
   LineSeg2: array [0 .. 20] of ILineDimension;
   ArcSeg: array [0 .. 20] of IArc;
   Fds: array [0 .. 20] of IDiametralDimension;
@@ -216,275 +368,435 @@ var
   symbCont: ISymbols2DContainer;
   leadersCol: ILeaders;
   lead: Ileader;
+  ks: ILineSegment;
   bLeader: IBaseLeader;
+  d_val, Da, D, Df, d_st, d_k: extended;
+  baseObj   : IDrawingObject;
+  roughPar  : IRoughParams;
+  rough1: IRoughs;
+  txt1, txt2, txt3 : IText;
+  toleranc: ITolerance;
+  Tolerans: ITolerances;
+  ToleranPar: IToleranceParam;
+  sh: IHatches;
 begin
-  x0 := 150;
-  y0 := 280;
+  x0 := 300;
+  y0 := 300;
   KP := Co_Application.Create;
   KP.Visible := true;
   KD := KP.Documents.Add(1, true);
   KD := KP.ActiveDocument;
   KD.LayoutSheets.Item[0].Format.Format := ksFormatUser;
-  KD.LayoutSheets.Item[0].Format.FormatWidth := 300;
+  KD.LayoutSheets.Item[0].Format.FormatWidth := 500;
   KD.LayoutSheets.Item[0].Format.FormatHeight := 500;
   KD.LayoutSheets.Item[0].Update;
-
   AW := (KD as IDrawingDocument).ViewsAndLayersManager.Views.ActiveView;
   LSS := ((KD as IDrawingDocument).ViewsAndLayersManager.Views.ActiveView as
     IDrawingContainer).LineSegments;
   Skk := (AW as ISymbols2DContainer).LineDimensions;
+  Tolerans := (AW as ISymbols2DContainer).Tolerances;
   Fd := (AW as ISymbols2DContainer).DiametralDimensions;
   Arcs := ((KD as IDrawingDocument).ViewsAndLayersManager.Views.ActiveView as
     IDrawingContainer).Arcs;
-    LineSeg[1] := AddLine2(LSS, x0 - 100, y0, x0 + 100, y0);
-    LineSeg[2] := AddLine(LSS, x0 - l/2, y0 + (1/4*B-3.5*m), x0 + L/2, y0 + (1/4*B-3.5*m));
+    Rough1 := (AW as ISymbols2DContainer).Roughs;
+    sh:= ((KD as IDrawingDocument).ViewsAndLayersManager.Views.ActiveView as
+    IDrawingContainer).Hatches;
+   da:=m*(z+1);
+   d:=m*z;
+   df:=m*(z-1.25);
+   d_val:=da/4;
+   d_st:=d_val*1.5;
+   d_k:=da-8*m;
+   LineSeg[0] := AddLine2(LSS, x0-2*b, y0, x0+2*b, y0);
+   LineSeg[0] := AddLine2(LSS, x0-b/2, y0+d/2, x0+b/2, y0+d/2);
+   LineSeg[0] := AddLine2(LSS, x0-b/2, y0-d/2, x0+b/2, y0-d/2);
+   LineSeg[1] := AddLine(LSS, x0 - b/1.5+m/2, y0 + d_val/2, x0 + b/1.5 - m/2, y0+ d_val/2);
+   LineSeg[2] := AddLine(LSS, x0 + b/1.5, y0 + d_val/2+m/2, x0 + b/1.5, y0+ d_st/2-m/2);
+   LineSeg[3] := AddLine(LSS, x0 + b/1.5-m/2, y0+ d_st/2, x0 + b/4, y0+ d_st/2);
+   LineSeg[4] := AddLine(LSS, x0 + b/4, y0+ d_st/2, x0 + b/4, y0+ d_k/2);
+   LineSeg[5] := AddLine(LSS, x0 + b/4, y0+ d_k/2, x0 + b/2-m/2, y0+ d_k/2);
+   LineSeg[6] := AddLine(LSS, x0 + b/2, y0+ d_k/2+m/2, x0 + b/2, y0+ Da/2-m/2);
+   LineSeg[7] := AddLine(LSS, x0 + b/2-m/2, y0+ Da/2, x0 - b/2+m/2, y0+ Da/2);
+   LineSeg[8] := AddLine(LSS, x0 - b/2, y0+ d_k/2+m/2, x0 - b/2, y0+ Da/2-m/2);
+   LineSeg[9] := AddLine(LSS, x0 - b/4, y0+ d_k/2, x0 - b/2+m/2, y0+ d_k/2);
+   LineSeg[10] := AddLine(LSS, x0 - b/4, y0+ d_st/2, x0 - b/4, y0+ d_k/2);
+   LineSeg[11] := AddLine(LSS, x0 - b/1.5+m/2, y0+ d_st/2, x0 - b/4, y0+ d_st/2);
+   LineSeg[12] := AddLine(LSS, x0 - b/1.5, y0 + d_val/2, x0 - b/1.5, y0+ d_st/2-m/2);
 
-    LineSeg[3] := AddLine(LSS, x0 - l/2, y0 + (1/4*B-3.5*m), x0 - L/2, y0 + (1/4*B));
-    LineSeg[4] := AddLine(LSS, x0 + l/2, y0 + (1/4*B-3.5*m), x0 + L/2, y0 + (1/4*B));
+   LineSeg[38] := AddLine(LSS, x0 - b/2, y0+ d_k/2+m/2, x0 - b/2+m/2, y0+ d_k/2);
+   LineSeg[38] := AddLine(LSS, x0 + b/2, y0+ Da/2-m/2, x0 + b/2-m/2, y0+ Da/2);
+   LineSeg[38] := AddLine(LSS, x0 - b/2+m/2, y0+ Da/2, x0 - b/2, y0+ Da/2-m/2);
+   LineSeg[38] := AddLine(LSS, x0 - b/1.5+m/2, y0+ d_st/2, x0 - b/1.5, y0+ d_st/2-m/2);
+   LineSeg[38] := AddLine(LSS, x0 + b/1.5, y0+ d_st/2-m/2, x0 + b/1.5-m/2, y0+ d_st/2);
+   LineSeg[39] := AddLine(LSS, x0 + b/2-m/2, y0+ d_k/2, x0 + b/2, y0+ d_k/2+m/2);
+   LineSeg[30] := AddLine(LSS, x0 + b/1.5 - m/2, y0+ d_val/2, x0 + b/1.5, y0 + d_val/2+m/2);
+   LineSeg[31] := AddLine(LSS, x0 - b/1.5+m/2, y0 + d_val/2, x0 - b/1.5, y0 + d_val/2+m/2);
 
-    LineSeg[5] := AddLine(LSS, x0 - l/2, y0 + (1/4*B), x0 - l/2 + (l/2-k/2), y0 + (1/4*B));
-    LineSeg[6] := AddLine(LSS, x0 + l/2, y0 + (1/4*B), x0 + l/2 - (l/2-k/2), y0 + (1/4*B));
+   LineSeg[1] := AddLine(LSS, x0 - b/1.5+m/2, y0 - d_val/2, x0 + b/1.5 - m/2, y0- d_val/2);
+   LineSeg[2] := AddLine(LSS, x0 + b/1.5, y0 - d_val/2-m/2, x0 + b/1.5, y0- d_st/2+m/2);
+   LineSeg[3] := AddLine(LSS, x0 + b/1.5-m/2, y0- d_st/2, x0 + b/4, y0- d_st/2);
+   LineSeg[4] := AddLine(LSS, x0 + b/4, y0- d_st/2, x0 + b/4, y0- d_k/2);
+   LineSeg[5] := AddLine(LSS, x0 + b/4, y0- d_k/2, x0 + b/2-m/2, y0- d_k/2);
+   LineSeg[6] := AddLine(LSS, x0 + b/2, y0- d_k/2-m/2, x0 + b/2, y0- Da/2+m/2);
+   LineSeg[7] := AddLine(LSS, x0 + b/2-m/2, y0- Da/2, x0 - b/2+m/2, y0- Da/2);
+   LineSeg[8] := AddLine(LSS, x0 - b/2, y0- d_k/2-m/2, x0 - b/2, y0- Da/2+m/2);
+   LineSeg[9] := AddLine(LSS, x0 - b/4, y0- d_k/2, x0 - b/2+m/2, y0- d_k/2);
+   LineSeg[10] := AddLine(LSS, x0 - b/4, y0- d_st/2, x0 - b/4, y0- d_k/2);
+   LineSeg[11] := AddLine(LSS, x0 - b/1.5+m/2, y0- d_st/2, x0 - b/4, y0-d_st/2);
+   LineSeg[12] := AddLine(LSS, x0 - b/1.5, y0 - d_val/2, x0 - b/1.5, y0- d_st/2+m/2);
 
-    LineSeg[7] := AddLine(LSS, x0 - l/2 + (l/2-k/2), y0 + (1/4*B), x0 - l/2 + (l/2-k/2), y0 + (1/4*B)+(m*(z+2.25))-3.5*m);
-    LineSeg[8] := AddLine(LSS, x0 + l/2 - (l/2-k/2), y0 + (1/4*B), x0 + l/2 - (l/2-k/2), y0 + (1/4*B)+(m*(z+2.25))-3.5*m);
+   LineSeg[38] := AddLine(LSS, x0 - b/2, y0- d_k/2-m/2, x0 - b/2+m/2, y0- d_k/2);
+   LineSeg[38] := AddLine(LSS, x0 + b/2, y0- Da/2+m/2, x0 + b/2-m/2, y0- Da/2);
+   LineSeg[38] := AddLine(LSS, x0 - b/2+m/2, y0- Da/2, x0 - b/2, y0- Da/2+m/2);
+   LineSeg[38] := AddLine(LSS, x0 - b/1.5+m/2, y0- d_st/2, x0 - b/1.5, y0- d_st/2+m/2);
+   LineSeg[38] := AddLine(LSS, x0 + b/1.5, y0- d_st/2+m/2, x0 + b/1.5-m/2, y0- d_st/2);
+   LineSeg[39] := AddLine(LSS, x0 + b/2-m/2, y0- d_k/2, x0 + b/2, y0- d_k/2-m/2);
+   LineSeg[30] := AddLine(LSS, x0 + b/1.5 - m/2, y0- d_val/2, x0 + b/1.5, y0 - d_val/2-m/2);
+   LineSeg[31] := AddLine(LSS, x0 - b/1.5+m/2, y0 - d_val/2, x0 - b/1.5, y0 - d_val/2-m/2);
 
-    LineSeg[9] := AddLine(LSS, x0 - l/2 + (l/2-k/2), y0 + (1/4*B)+(m*(z+2.25))-3.5*m,
-     x0 - l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m);
-    LineSeg[10] := AddLine(LSS, x0 + l/2 - (l/2-k/2), y0 + (1/4*B)+(m*(z+2.25))-3.5*m,
-     x0 + l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m);
+   LineSeg[34] := AddLine(LSS, x0 - b/1.5, y0 + d_val/2+m/2, x0 - b/1.5, y0 - d_val/2-m/2);
+   LineSeg[35] := AddLine(LSS, x0 - b/1.5+m/2, y0 + d_val/2, x0 - b/1.5+m/2, y0 - d_val/2);
+   LineSeg[36] := AddLine(LSS, x0 + b/1.5, y0 + d_val/2+m/2, x0 + b/1.5, y0 - d_val/2-m/2);
+   LineSeg[37] := AddLine(LSS, x0 + b/1.5-m/2, y0 + d_val/2, x0 + b/1.5-m/2, y0 - d_val/2);
 
-    LineSeg[11] := AddLine(LSS, x0 - l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m,
-     x0 - l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m+3.5*m);
-    LineSeg[12] := AddLine(LSS, x0 + l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m,
-     x0 + l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m+3.5*m);
+   LineSeg[34] := AddLine(LSS, x0 + b/2-m/2, y0- d_k/2, x0 + b/2-m/2, y0- d_st/2);
+   LineSeg[35] := AddLine(LSS, x0 + b/2, y0- d_k/2-m/2, x0 + b/2, y0- d_st/2);
+   LineSeg[34] := AddLine(LSS, x0 - b/2+m/2, y0- d_k/2, x0 - b/2+m/2, y0- d_st/2);
+   LineSeg[35] := AddLine(LSS, x0 - b/2, y0- d_k/2-m/2, x0 - b/2, y0- d_st/2);
+   LineSeg[34] := AddLine(LSS, x0 + b/2-m/2, y0+ d_k/2, x0 + b/2-m/2, y0+ d_st/2);
+   LineSeg[35] := AddLine(LSS, x0 + b/2, y0+ d_k/2+m/2, x0 + b/2, y0+ d_st/2);
+   LineSeg[34] := AddLine(LSS, x0 - b/2+m/2, y0+ d_k/2, x0 - b/2+m/2, y0+ d_st/2);
+   LineSeg[35] := AddLine(LSS, x0 - b/2, y0+ d_k/2+m/2, x0 - b/2, y0+ d_st/2);
 
-    LineSeg[13] := AddLine(LSS, x0 - l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m+3.5*m,
-     x0 + l/2, y0 + (1/4*B)+(m*(z+2.25))-3.5*m+3.5*m);
-//  ArcSeg[1] := AddArc(Arcs, x0, y0, D1 / 2);
-//  ArcSeg[2] := AddArc(Arcs, x0, y0, D / 2); // окружность
-//  ArcSeg[3] := AddArc1(Arcs, x0, y0, D5);
-//  ArcSeg[4] := AddArc(Arcs, x0 - D5, y0, M / 2);
-//  ArcSeg[5] := AddArc(Arcs, x0 + D5, y0, M / 2);
-//  ArcSeg[6] := AddArc(Arcs, x0, y0 - D5, M / 2);
-//  ArcSeg[7] := AddArc(Arcs, x0, y0 + D5, M / 2);
-//  LineSeg[1] := AddLine2(LSS, x0, y0 - L1 / 2 - 5, x0, y0 + L1 / 2 + 5);
-//  LineSeg[2] := AddLine2(LSS, x0 - L1 / 2 - 5, y0, x0 + L1 / 2 + 5, y0);
-//  LineSeg[3] := AddLine(LSS, x0 - L2 / 2, y0 + L1 / 2, x0 - L2 / 2 + L2,
-//    y0 + L1 / 2);
-//  LineSeg[4] := AddLine(LSS, x0 - L2 / 2, y0 - L1 / 2, x0 - L2 / 2 + L2,
-//    y0 - L1 / 2);
-//  LineSeg[5] := AddLine(LSS, x0 - L2 / 2 + L2, y0 + L1 / 2, x0 - L2 / 2 + L2,
-//    y0 + L1 / 2 - Ab);
-//  LineSeg[6] := AddLine(LSS, x0 - L2 / 2 + L2, y0 + L1 / 2 - Ab,
-//    x0 - L2 / 2 + L2 - Bc, y0 + L1 / 2 - Ab);
-//  LineSeg[7] := AddLine(LSS, x0 - L2 / 2 + L2 - Bc, y0 + L1 / 2 - Ab,
-//    x0 - L2 / 2 + L2 - Bc, y0 + L1 / 2 - Ab - L6);
-//  LineSeg[14] := AddLine(LSS, x0 - L2 / 2 + L2 - Bc, y0 + L1 / 2 - Ab - L6,
-//    x0 - L2 / 2 + L2 - Bc + Bc, y0 + L1 / 2 - Ab - L6);
-//  LineSeg[8] := AddLine(LSS, x0 - L2 / 2 + L2 - Bc + Bc, y0 + L1 / 2 - Ab - L6,
-//    x0 - L2 / 2 + L2 - Bc + Bc, y0 + L1 / 2 - Ab - L6 - Ab);
-//  LineSeg[9] := AddLine(LSS, x0 - L2 / 2, y0 + L1 / 2, x0 - L2 / 2,
-//    y0 + L1 / 2 - Ab);
-//  LineSeg[10] := AddLine(LSS, x0 - L2 / 2, y0 + L1 / 2 - Ab, x0 - L2 / 2 + Bc,
-//    y0 + L1 / 2 - Ab);
-//  LineSeg[11] := AddLine(LSS, x0 - L2 / 2 + Bc, y0 + L1 / 2 - Ab,
-//    x0 - L2 / 2 + Bc, y0 + L1 / 2 - Ab - L6);
-//  LineSeg[12] := AddLine(LSS, x0 - L2 / 2 + Bc, y0 + L1 / 2 - Ab - L6,
-//    x0 - L2 / 2 + Bc - Bc, y0 + L1 / 2 - Ab - L6);
-//  LineSeg[13] := AddLine(LSS, x0 - L2 / 2 + Bc - Bc, y0 + L1 / 2 - Ab - L6,
-//    x0 - L2 / 2 + Bc - Bc, y0 + L1 / 2 - Ab - L6 - Ab);
+   LineSeg[35] := AddLine(LSS, x0 - b/2, y0+ df/2, x0 + b/2, y0+df/2);
+   LineSeg[35] := AddLine(LSS, x0 - b/2, y0- df/2, x0 + b/2, y0-df/2);
+
+   Arcs.Add;
+   Arcs.Arc[0].Xc:=x0-150;
+   Arcs.Arc[0].Yc:=y0;
+   Arcs.Arc[0].X1:=x0-150-d_val/8;
+   Arcs.Arc[0].Y1:=y0+d_val/2;
+   Arcs.Arc[0].X2:=x0-150+d_val/8;
+   Arcs.Arc[0].Y2:=y0+d_val/2;
+   Arcs.Arc[0].Direction:=False;
+   Arcs.Arc[0].Radius:=d_val/2;
+   Arcs.Arc[0].Update;
+
+   LineSeg[35] := AddLine(LSS, x0-b/1.5, y0+d_val/2+3, x0+b/1.5, y0+d_val/2+3);
+
+   LineSeg[35] := AddLine(LSS, x0-150-d_val/8, y0+d_val/2-1, x0-150-d_val/8, y0+d_val/2+3);
+   LineSeg[35] := AddLine(LSS, x0-150+d_val/8, y0+d_val/2-1, x0-150+d_val/8, y0+d_val/2+3);
+   LineSeg[35] := AddLine(LSS, x0-150-d_val/8, y0+d_val/2+3, x0-150+d_val/8, y0+d_val/2+3);
+   LineSeg[0] := AddLine2(LSS, x0-150, y0-d_val/2-10, x0-150, y0+d_val/2+10);
+   LineSeg[0] := AddLine2(LSS, x0-150-d_val/2-10, y0, x0-150+d_val/2+10, y0);
+
+   LineSeg2[1] := AddLine1(Skk, x0 + b/2, y0- Da/2, x0 + b/2, y0+ Da/2, x0+4*b, y0 + Da / 4);
+   LineSeg2[2] := AddLine1(Skk, x0 + b/2, y0+ d_k/2, x0 + b/2, y0- d_k/2, x0+3.5*b, y0 + Da / 4);
+   LineSeg2[3] := AddLine1(Skk, x0 + b/2, y0+ d_st/2, x0 + b/2, y0- d_st/2, x0+3*b, y0 + Da / 4);
+   LineSeg2[4] := AddLine1(Skk, x0 - b/2, y0 + d_val/2, x0 - b/2, y0 - d_val/2, x0+2.5*b, y0 + Da / 4);
+   LineSeg2[5] := AddLine1(Skk, x0 + b/2, y0 + d_k/2, x0 - b/2, y0 + d_k/2, x0, y0 + Da / 2+8*m);
+   LineSeg2[6] := AddLine1(Skk, x0 + b/1.5, y0 + d_val/2, x0 - b/1.5, y0 + d_val/2, x0, y0 + Da / 2+12*m);
+   LineSeg2[7] := AddLine1(Skk, x0 + b/4, y0+ d_st/2, x0 - b/4, y0+ d_st/2, x0, y0 + Da / 2+4*m);
+   LineSeg2[8] := AddLine1(Skk, x0 - b/1.5, y0 + d_val/4, x0 - b/1.5+m/2, y0 + d_val/4, x0-b, y0+ d_val/4);
+   LineSeg2[9] := AddLine1(Skk, x0 - b/2, y0 + d/4, x0 - b/2+m/2, y0 + d/4, x0-b, y0+ d/4);
+   LineSeg2[10] := AddLine1(Skk, x0-150-d_val/8, y0+d_val/2+3, x0-150+d_val/8, y0+d_val/2+3, x0-150, y0+d_val/2+20);
+   LineSeg2[11] := AddLine1(Skk, x0-150, y0+d_val/2+3, x0-150, y0-d_val/2, x0-150-d_val, y0);
+
+//   LineSeg[35] := AddLine(LSS, 0, 0, 0, 20);
+//   LineSeg[35] := AddLine(LSS, 0, 20, 20, 20);
+//   LineSeg[35] := AddLine(LSS, 20, 20, 20, 0);
+//   LineSeg[35] := AddLine(LSS, 20, 0, 0, 0);
 //
-//  ArcSeg[8] := AddArc(Arcs, x0 - L5 / 2, y0 - L7 / 2, D4 / 2);
-//  LineSeg[15] := AddLine2(LSS, x0 - L5 / 2, y0 - L7 / 2 - 5, x0 - L5 / 2,
-//    y0 - L7 / 2 + 5);
-//  LineSeg[16] := AddLine2(LSS, x0 - L5 / 2 - 5, y0 - L7 / 2, x0 - L5 / 2 + 5,
-//    y0 - L7 / 2);
-//  ArcSeg[9] := AddArc(Arcs, x0 - L5 / 2, y0 + L7 / 2, D4 / 2);
-//  LineSeg[17] := AddLine2(LSS, x0 - L5 / 2, y0 + L7 / 2 - 5, x0 - L5 / 2,
-//    y0 + L7 / 2 + 5);
-//  LineSeg[18] := AddLine2(LSS, x0 - L5 / 2 - 5, y0 + L7 / 2, x0 - L5 / 2 + 5,
-//    y0 + L7 / 2);
-//  ArcSeg[8] := AddArc(Arcs, x0 + L5 / 2, y0 + L7 / 2, D4 / 2);
-//  LineSeg[19] := AddLine2(LSS, x0 + L5 / 2, y0 + L7 / 2 - 5, x0 + L5 / 2,
-//    y0 + L7 / 2 + 5);
-//  LineSeg[20] := AddLine2(LSS, x0 + L5 / 2 - 5, y0 + L7 / 2, x0 + L5 / 2 + 5,
-//    y0 + L7 / 2);
-//  ArcSeg[8] := AddArc(Arcs, x0 + L5 / 2, y0 - L7 / 2, D4 / 2);
-//  LineSeg[15] := AddLine2(LSS, x0 + L5 / 2, y0 - L7 / 2 - 5, x0 + L5 / 2,
-//    y0 - L7 / 2 + 5);
-//  LineSeg[16] := AddLine2(LSS, x0 + L5 / 2 - 5, y0 - L7 / 2, x0 + L5 / 2 + 5,
-//    y0 - L7 / 2);
-//
-//  LineSeg[17] := AddLine(LSS, X1, Y1, X1 + D1 - 5, Y1);
-//  LineSeg[18] := AddLine(LSS, X1, Y1, X1 - 2.5, Y1 - 2.5);
-//  LineSeg[19] := AddLine(LSS, X1 - 2.5, Y1 - 2.5, X1 - 2.5 + D1 / 2, Y1 - 2.5);
-//  LineSeg[20] := AddLine(LSS, X1 - 2.5, Y1 - 2.5, X1 - 2.5, Y1 - (L - L3));
-//  LineSeg[21] := AddLine(LSS, X1 - 2.5 - Bc, Y1 - (L - L3),
-//    X1 - 2.5 - Bc + D1 / 2 + Bc, Y1 - (L - L3));
-//  LineSeg[22] := AddLine(LSS, X1 - 2.5 - Bc, Y1 - (L - L3), X1 - 2.5 - Bc,
-//    Y1 - (L - L3) - L3);
-//  LineSeg[23] := AddLine(LSS, X1 - 2.5 - Bc, Y1 - (L - L3) - L3,
-//    X1 - 2.5 - Bc + L2, Y1 - (L - L3) - L3);
-//  LineSeg[24] := AddLine2(LSS, X1 + D1 / 2 - 2.5, Y1 + 2, X1 + D1 / 2 - 2.5,
-//    Y1 - L - 2);
-//  LineSeg[25] := AddLine(LSS, X1 - 2.5 - Bc + De - De / 2, Y1 - (L - L3),
-//    X1 - 2.5 - Bc + De - De / 2, Y1 - (L - L3) - L3);
-//  LineSeg[26] := AddLine2(LSS, X1 - 2.5 - Bc + De, Y1 - (L - L3) + 2,
-//    X1 - 2.5 - Bc + De, Y1 - (L - L3) - L3 - 2);
-//  LineSeg[27] := AddLine(LSS, X1 - 2.5 - Bc + De + De / 2, Y1 - (L - L3),
-//    X1 - 2.5 - Bc + De + De / 2, Y1 - (L - L3) - L3);
-//  LineSeg[28] := AddLine(LSS, X1 + D1 / 2 + D / 2 - 2.5, Y1,
-//    X1 + D1 / 2 + D / 2 - 2.5, Y1 - Fg);
-//  LineSeg[31] := AddLine(LSS, X1 + D1 - 5, Y1, X1 + D1 - 5 + 2.5, Y1 - 2.5);
-//  LineSeg[32] := AddLine(LSS, X1 + D1 - 5 + 2.5, Y1 - 2.5, X1 + D1 - 5 + 2.5,
-//    Y1 - 2.5 - (L - L3));
-//  LineSeg[33] := AddLine(LSS, X1 + D1 - 5 + 2.5, Y1 - 2.5 - (L - L3),
-//    X1 + D1 - 5 + 2.5 + Bc + (L4 - D1), Y1 - 2.5 - (L - L3));
-//  LineSeg[29] := AddLine(LSS, X1 + D1 / 2 - 2.5, Y1 - (L - L8),
-//    X1 + D1 / 2 - 2.5 + D2 / 2, Y1 - (L - L8));
-//  LineSeg[30] := AddLine(LSS, X1 + D1 / 2 - 2.5 + D2 / 2, Y1 - (L - L8),
-//    X1 + D1 / 2 - 2.5 + D2 / 2, Y1 - (L - L8) - L8);
-//  LineSeg[34] := AddLine(LSS, X1 + D1 - 5 + 2.5 + Bc + (L4 - D1),
-//    Y1 - 2.5 - (L - L3), X1 + D1 - 5 + 2.5 + Bc + (L4 - D1),
-//    Y1 - (L - L3) - L3);
-//  LineSeg[35] := AddLine(LSS, X1 + L4 - 2.5, Y1 - 2.5 - (L - L3), X1 + L4 - 2.5,
-//    Y1 - (L - L3) - L3);
-//  LineSeg[36] := AddLine2(LSS, X1 + L4 - 2.5 + De, Y1 - (L - L3) + 0.5,
-//    X1 + L4 - 2.5 + De, Y1 - (L - L3) - L3 - 2);
-//  LineSeg[37] := AddLine(LSS, X1 + D1 - 5, Y1, X1 + D1 - 5 - 2, Y1 - 2);
-//  LineSeg[38] := AddLine(LSS, X1 + D1 - 5 - 2, Y1 - 2, X1 + D1 - 5 - 2,
-//    Y1 - 2 - (L - L8) + 2);
-//  LineSeg[39] := AddLine(LSS, X1 + D1 - 5 - 2, Y1 - 2,
-//    X1 + D1 - 5 - 2 - M, Y1 - 2);
-//  LineSeg[40] := AddLine(LSS, X1 + D1 - 5 - 2 - M, Y1 - 2,
-//    X1 + D1 - 5 - 2 - M - 2, Y1 - 2 + 2);
-//  LineSeg[41] := AddLine(LSS, X1 + D1 - 5 - 2 - M, Y1 - 2, X1 + D1 - 5 - 2 - M,
-//    Y1 - 2 - (L - L8) + 2);
-//  LineSeg[41] := AddLine2(LSS, X1 + D1 - 5 - 2 - M / 2, Y1 + 2,
-//    X1 + D1 - 5 - 2 - M / 2, Y1 - 2 - (L - L8));
-//
-//  LineSeg2[1] := AddLine1(Skk, x0 - L4 / 2, y0, x0 + L4 / 2, y0, x0,
-//    y0 - L1 / 2 - 10);
-//  LineSeg2[2] := AddLine1(Skk, x0 - L5 / 2, y0 - ((L1 - L7) / 2), x0 + L5 / 2,
-//    y0 - ((L1 - L7) / 2), x0, y0 - L1 / 2 - 20);
-//  LineSeg2[3] := AddLine1(Skk, x0 - L2 / 2, y0 - L1 / 2, x0 + L2 / 2,
-//    y0 - L1 / 2, x0, y0 - L1 / 2 - 30);
-//  LineSeg2[4] := AddLine1(Skk, x0 + L2 / 2, y0 + L6 / 2, x0 + L2 / 2,
-//    y0 - L6 / 2, x0 + L2 / 2 + 10, y0);
-//  LineSeg2[5] := AddLine1(Skk, x0 + L5 / 2, y0 + L7 / 2, x0 + L5 / 2,
-//    y0 - L7 / 2, x0 + L2 / 2 + 20, y0);
-//  LineSeg2[6] := AddLine1(Skk, x0 + L2 / 2, y0 + L1 / 2, x0 + L2 / 2,
-//    y0 - L1 / 2, x0 + L2 / 2 + 30, y0);
-//  LineSeg2[7] := AddLine1(Skk, X1 - Bc, Y1 - (L - L3), X1 - Bc,
-//    Y1 - (L - L3) - L3, X1 - Bc - 10, Y1 - (L - L3));
-//  LineSeg2[8] := AddLine1(Skk, X1, Y1, X1, Y1 - L, X1 - 20, Y1 - L);
-//  LineSeg2[9] := AddLine1(Skk, X1, Y1, X1, Y1 - 2.5, X1 - 10, Y1);
-//  LineSeg2[10] := AddLine1(Skk, X1 + D1 - 5, Y1, X1 + D1 - 5, Y1 - 2.5,
-//    X1 + D1 - 5 + 10, Y1);
-//  LineSeg2[11] := AddLine1(Skk, X1 + D1 / 2 - 2.5 + D2 / 2, Y1 - (L - L8),
-//    X1 + D1 / 2 - 2.5 + D2 / 2, Y1 - (L - L8) - L8, X1 + D1 / 2 - 2.5 + D2 / 2 +
-//    L2 / 2, Y1 - (L - L8));
-//
-//  dimText := LineSeg2[9] as IDimensionText; // текст рядом с размером
-//  dimText.Suffix.Str := 'x45&01';
-//  LineSeg2[9].Update;
-//  dimText := LineSeg2[10] as IDimensionText; // текст рядом с размером
-//  dimText.Suffix.Str := 'x45&01';
-//  LineSeg2[10].Update;
-//
-//  LineSeg2[12] := AddLine1(Skk, X1 + (D1 / 2 - D / 2) - 2.5, Y1,
-//    X1 + D1 / 2 + D / 2 - 2.5, Y1, X1 + D1 / 2 + D / 2 - 2.5, Y1 + 10);
-//  dimParam := LineSeg2[12] as IDimensionParams; // текст с одной стрелочкой
-//  dimParam.RemoteLine1 := False;
-//  dimParam.ArrowType1 := ksLeaderWithoutArrow;
-//  LineSeg2[12].Update;
-//  LineSeg2[13] := AddLine1(Skk, X1 - 2.5, Y1 - 2.5, X1 + D1 - 2.5, Y1-2.5,
-//    X1 + D1 - 2.5, Y1 + 20);
-//  dimParam := LineSeg2[13] as IDimensionParams; // текст с одной стрелочкой
-//  dimParam.RemoteLine1 := False;
-//  dimParam.ArrowType1 := ksLeaderWithoutArrow;
-//  LineSeg2[13].Update;
-//
-//  symbCont := (KD as IKompasDocument2D).ViewsAndLayersManager.Views.ActiveView
-//    As ISymbols2DContainer;
-//  leadersCol := symbCont.Leaders;
-//  leader := leadersCol.Add(ksDrLeader) As Ileader;
-//  // CreateLeader(leader);
-//  if (leader <> nil) then
-//  begin
-//    // Направление полки - вправо
-//    leader.ShelfDirection := ksLSLeft;
-//
-//    // Получаем интерфейс ответвлений
-//    branchs := leader As IBranchs;
-//
-//    if (branchs <> nil) then
-//    begin
-//      // Координаты начала полки или точка привязки
-//      branchs.x0 := x0 - L5 / 5;
-//      branchs.y0 := y0 + L1 / 2 + 10;
-//      // Добавить прямолинейные ответвления
-//      branchs.AddBranchByPoint(-1, x0 - M / 2, y0 + L7 / 2 + 2);
-//      // branchs.AddBranchByPoint(-1, x0 - L4 / 2 + 20, y0 - L7 / 2 + 10);
-//    end;
-//
-//    // Получить интерфейс текста над полкой
-//    txtOnSh := leader.TextOnShelf;
-//
-//    if (txtOnSh <> nil) then
-//      // Изменить текст
-//      txtOnSh.Str := '4 отв. M' + FloatToStr(M);
-//
-//    baseLeader := leader As IBaseLeader;
-//
-//    if (baseLeader <> nil) then
-//      // Применить параметры
-//      baseLeader.Update();
-//    leader := leadersCol.Add(ksDrLeader) As Ileader;
-//    // CreateLeader(leader);
-//    if (leader <> nil) then
-//    begin
-//      // Направление полки - вправо
-//      leader.ShelfDirection := ksLSLeft;
-//
-//      // Получаем интерфейс ответвлений
-//      branchs := leader As IBranchs;
-//
-//      if (branchs <> nil) then
-//      begin
-//        // Координаты начала полки или точка привязки
-//        branchs.x0 := x0 - L2 / 2 - 10;
-//        branchs.y0 := y0 - L7 / 2 - 5;
-//        // Добавить прямолинейные ответвления
-//
-//        branchs.AddBranchByPoint(-1, x0 - L5 / 2 - D4 / 2,
-//          y0 - L7 / 2 - D4 / 2);
-//      end;
-//
-//      // Получить интерфейс текста над полкой
-//      txtOnSh := leader.TextOnShelf;
-//
-//      if (txtOnSh <> nil) then
-//        // Изменить текст
-//        txtOnSh.Str := '4 отв. M' + FloatToStr(D4);
-//
-//      baseLeader := leader As IBaseLeader;
-//
-//      if (baseLeader <> nil) then
-//        // Применить параметры
-//        baseLeader.Update();
-//    end;
-//  end;
+//   sh.Add;
+//   sh.Hatch[0].X:=0;
+//   sh.Hatch[0].Y:=0;
+//   sh.Hatch[0].Update;
+
+   dimText := LineSeg2[1] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '@2~';
+   LineSeg2[1].Update;
+
+   dimText := LineSeg2[2] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '@2~';
+   LineSeg2[2].Update;
+   dimText := LineSeg2[3] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '@2~';
+   LineSeg2[3].Update;
+   dimText := LineSeg2[4] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '@2~';
+   LineSeg2[4].Update;
+
+   dimText := LineSeg2[8] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '2 фаски ';
+   dimText.Suffix.Str := 'x45&01';
+   LineSeg2[8].Update;
+
+   dimText := LineSeg2[9] as IDimensionText; // текст рядом с размером
+   dimText.Prefix.Str := '2 фаски ';
+   dimText.Suffix.Str := 'x45&01';
+   LineSeg2[9].Update;
+
+   rough1.Add;
+   rough1.Rough[0].X0:=500-40;
+   rough1.Rough[0].y0:=500-30;
+   roughPar:=rough1.Rough[0]as IRoughParams;
+   //roughPar.ShelfDirection := ksLSRight;
+					// Обработка по контуру включена
+					//roughPar.ProcessingByContour := true;
+					// Длина линии выноски
+					//roughPar.LeaderLength := 20;
+					// Угол наклона линии выноски
+					//roughPar.LeaderAngle := 45;
+          //txt1 := roughPar.RoughParamText;
+					//if ( txt1 <> nil ) then
+						//txt1.Str := '1';
+					// Получить интерфейс текста способа обработки поверхности
+					txt2 := roughPar.ProcessText;
+					if ( txt2 <> nil ) then
+						txt2.Str := '6,3';
+					// Получить интерфейс текста базовой длины
+					//txt3 := roughPar.TrendText;
+					//if ( txt3 <> nil ) then
+						//txt3.Str := '3';
+   rough1.Rough[0].Update;
+
+   rough1.Add;
+   rough1.Rough[1].X0:=x0;
+   rough1.Rough[1].y0:=y0 - d_val/2;
+   roughPar:=rough1.Rough[1] as IRoughParams;
+   roughPar.ShelfDirection := ksLSLeft;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := b*1.5;
+   roughPar.LeaderAngle := 180;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := '0,8';
+   rough1.Rough[1].Update;
+
+   rough1.Add;
+   rough1.Rough[2].X0:=x0 + b/1.5;
+   rough1.Rough[2].y0:=y0+d_st/2;
+   roughPar:=rough1.Rough[2] as IRoughParams;
+   roughPar.ShelfDirection := ksLSUp;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := Da/1.5;
+   roughPar.LeaderAngle := 90;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := '1,6';
+   rough1.Rough[2].Update;
+
+   rough1.Add;
+   rough1.Rough[3].X0:=x0 - b/1.5;
+   rough1.Rough[3].y0:=y0+d_st/2;
+   roughPar:=rough1.Rough[3] as IRoughParams;
+   roughPar.ShelfDirection := ksLSUp;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := Da/1.5;
+   roughPar.LeaderAngle := 90;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := '1,6';
+   rough1.Rough[3].Update;
+
+   rough1.Add;
+   rough1.Rough[4].X0:=x0;
+   rough1.Rough[4].y0:=y0 + d/2;
+   roughPar:=rough1.Rough[4] as IRoughParams;
+   roughPar.ShelfDirection := ksLSLeft;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := b;
+   roughPar.LeaderAngle := 180;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := '1,25';
+   rough1.Rough[4].Update;
+
+   rough1.Add;
+   rough1.Rough[5].X0:=x0-150+d_val/8;
+   rough1.Rough[5].y0:=y0+d_val/2-1;
+   roughPar:=rough1.Rough[5] as IRoughParams;
+   roughPar.ShelfDirection := ksLSUp;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := d_val;
+   roughPar.LeaderAngle := 90;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := 'Rz20';
+   rough1.Rough[5].Update;
+
+   rough1.Add;
+   rough1.Rough[6].X0:=x0-150;
+   rough1.Rough[6].y0:=y0+d_val/2+3;
+   roughPar:=rough1.Rough[6] as IRoughParams;
+   roughPar.ShelfDirection := ksLSLeft;
+   roughPar.ArrowType:=0;
+   roughPar.LeaderLength := d_val/3;
+   roughPar.LeaderAngle := 180;
+   txt2 := roughPar.ProcessText;
+   if ( txt2 <> nil ) then
+    txt2.Str := 'Rz40';
+   rough1.Rough[6].Update;
+
+   Toleranc:=Tolerans.Add;
+   	if ( toleranc <> nil ) then
+	begin
+		// Получить интерфейс ответвления
+		branchs := toleranc As IBranchs;
+
+		if ( branchs <> nil ) then
+		begin
+			// Задать точку привязки
+			branchs.X0 := x0+2.5*b;
+			branchs.Y0 := y0+da/3;
+			// Добавить 2 ответвления
+			branchs.AddBranchByPoint( -1, x0+2.5*b, y0+d_val/2 );
+			//branchs.AddBranchByPoint( -1, 50, 155 );
+		end;
+
+		// Получить интерфейс параметров допуска формы
+		ToleranPar := toleranc As IToleranceParam;
+
+		if ( ToleranPar <> nil ) then
+		begin
+			// Создать текст в ячейках
+			SetToleranceText( ToleranPar );
+			// Положение базовой точки относительно таблицы - внизу посередине
+			ToleranPar.BasePointPos := ksTPBottomCenter;
+		end;
+
+		// Тип стрелки 1-го ответвления - треугольник
+		toleranc.Set_ArrowType( 0, FALSE );
+		// Положение 1-го ответвления относительно таблицы - внизу посередине
+		toleranc.Set_BranchPos( 0, ksTPBottomCenter );
+		// Тип стрелки 2-го ответвления - стрелка
+		//toleranc.Set_ArrowType( 1, TRUE );
+		// Положение 2-го ответвления относительно таблицы - слева посередине
+		//toleranc.Set_BranchPos( 1, ksTPLeftCenter );
+		// Применить параметры
+		toleranc.Update();
+	end;
+
+  Toleranc:=Tolerans.Add;
+if ( toleranc <> nil ) then
+	begin
+		// Получить интерфейс ответвления
+		branchs := toleranc As IBranchs;
+
+		if ( branchs <> nil ) then
+		begin
+			// Задать точку привязки
+			branchs.X0 := x0-1.5*b;
+			branchs.Y0 := y0 - d_val;
+			// Добавить 2 ответвления
+			branchs.AddBranchByPoint( -1, x0-b*2-4, y0 - d_val/2 );
+		end;
+
+		// Получить интерфейс параметров допуска формы
+		ToleranPar := toleranc As IToleranceParam;
+
+		if ( ToleranPar <> nil ) then
+		begin
+			// Создать текст в ячейках
+			SetToleranceText2( ToleranPar );
+			// Положение базовой точки относительно таблицы - внизу посередине
+			ToleranPar.BasePointPos := ksTPBottomCenter;
+		end;
+
+		// Тип стрелки 1-го ответвления - треугольник
+		//toleranc.Set_ArrowType( 1, FALSE );
+		// Положение 1-го ответвления относительно таблицы - внизу посередине
+		//toleranc.Set_BranchPos( 0, ksTPBottomCenter );
+		// Тип стрелки 2-го ответвления - стрелка
+		toleranc.Set_ArrowType( 1, TRUE );
+		// Положение 2-го ответвления относительно таблицы - слева посередине
+		toleranc.Set_BranchPos( 1, ksTPLeftCenter );
+		// Применить параметры
+		toleranc.Update();
+	end;
+
+  Toleranc:=Tolerans.Add;
+if ( toleranc <> nil ) then
+	begin
+		// Получить интерфейс ответвления
+		branchs := toleranc As IBranchs;
+
+		if ( branchs <> nil ) then
+		begin
+			// Задать точку привязки     x0, y0 + Da / 2+8*m
+			branchs.X0 := x0+2*b;
+			branchs.Y0 := y0 + Da / 2+12*m;
+			// Добавить 2 ответвления
+			branchs.AddBranchByPoint( -1, x0+b-b/3, y0 + Da / 2+12*m );
+		end;
+
+		// Получить интерфейс параметров допуска формы
+		ToleranPar := toleranc As IToleranceParam;
+
+		if ( ToleranPar <> nil ) then
+		begin
+			// Создать текст в ячейках
+			SetToleranceText3( ToleranPar );
+			// Положение базовой точки относительно таблицы - внизу посередине
+			ToleranPar.BasePointPos := ksTPBottomCenter;
+		end;
+
+		// Тип стрелки 1-го ответвления - треугольник
+		//toleranc.Set_ArrowType( 1, FALSE );
+		// Положение 1-го ответвления относительно таблицы - внизу посередине
+		//toleranc.Set_BranchPos( 0, ksTPBottomCenter );
+		// Тип стрелки 2-го ответвления - стрелка
+		toleranc.Set_ArrowType( 1, TRUE );
+		// Положение 2-го ответвления относительно таблицы - слева посередине
+		toleranc.Set_BranchPos( 1, ksTPLeftCenter );
+		// Применить параметры
+		toleranc.Update();
+	end;
+  Toleranc:=Tolerans.Add;
+if ( toleranc <> nil ) then
+	begin
+		// Получить интерфейс ответвления
+		branchs := toleranc As IBranchs;
+
+		if ( branchs <> nil ) then
+		begin
+			// Задать точку привязки     x0, y0 + Da / 2+8*m
+			branchs.X0 := x0-2*b;
+			branchs.Y0 := y0 + Da / 2+12*m;
+			// Добавить 2 ответвления
+			branchs.AddBranchByPoint( -1, x0-b+b/3, y0 + Da / 2+12*m );
+		end;
+
+		// Получить интерфейс параметров допуска формы
+		ToleranPar := toleranc As IToleranceParam;
+
+		if ( ToleranPar <> nil ) then
+		begin
+			// Создать текст в ячейках
+			SetToleranceText3( ToleranPar );
+			// Положение базовой точки относительно таблицы - внизу посередине
+			ToleranPar.BasePointPos := ksTPBottomCenter;
+		end;
+
+		// Тип стрелки 1-го ответвления - треугольник
+		//toleranc.Set_ArrowType( 1, FALSE );
+		// Положение 1-го ответвления относительно таблицы - внизу посередине
+		//toleranc.Set_BranchPos( 0, ksTPBottomCenter );
+		// Тип стрелки 2-го ответвления - стрелка
+		toleranc.Set_ArrowType( 1, TRUE );
+		// Положение 2-го ответвления относительно таблицы - слева посередине
+		toleranc.Set_BranchPos( 1, ksTPLeftCenter );
+		// Применить параметры
+		toleranc.Update();
+	end;
 end;
 
 procedure TForm1.Button1Click(Sender: TObject);
 begin
-M0:=strtofloat(labelededit2.text);
-Z0:=strtofloat(labelededit3.text);
-B0:=strtofloat(labelededit4.text);
-L0:=strtofloat(labelededit5.text);
-K0:=0.5*L0;
-  Kompas(B0, L0, K0, M0, Z0);
+  M0 := strtofloat(LabeledEdit2.text);
+  Z0 := strtofloat(LabeledEdit3.text);
+  B0 := strtofloat(LabeledEdit4.text);
+  Kompas(B0, M0, Z0);
 end;
 
 End.

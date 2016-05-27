@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{4C59115A-87AB-4508-80A8-FB8E7D295F08}</ProjectGuid>
+        <ProjectGuid>{633F37E9-D902-4CA5-A07C-A83C488F879B}</ProjectGuid>
         <ProjectVersion>18.0</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Project1.dpr</MainSource>
@@ -87,8 +87,6 @@
         <DCCReference Include="Unit1.pas">
             <Form>Form1</Form>
         </DCCReference>
-        <DCCReference Include="..\..\Documents\Embarcadero\Studio\17.0\Imports\Kompas6Constants_TLB.pas"/>
-        <DCCReference Include="..\..\Documents\Embarcadero\Studio\17.0\Imports\KompasAPI7_TLB.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
